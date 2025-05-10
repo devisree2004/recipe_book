@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TastyBites - The Real Joy is Homemade</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff9f0;
+            color: #333;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin: 0;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .header p {
+            font-size: 1.5rem;
+            margin: 10px 0 0;
+            font-style: italic;
+        }
+
+        /* Tagline Section */
+        .tagline {
+            text-align: center;
+            padding: 60px 20px;
+            background-color: #ff6b6b;
+            color: white;
+        }
+
+        .tagline h2 {
+            font-size: 2.5rem;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .tagline h2 strong {
+            font-weight: 700;
+        }
+
+        /* Food Gallery */
+        .food-gallery {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .food-gallery h2 {
+            font-size: 2rem;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .food-item {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            height: 250px;
+            cursor: pointer;
+        }
+
+        .food-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .food-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .food-item .dish-name {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 107, 107, 0.9);
+            color: white;
+            padding: 15px;
+            transform: translateY(100%);
+            transition: all 0.3s ease;
+        }
+
+        .food-item:hover .dish-name {
+            transform: translateY(0);
+        }
+
+        /* Recipe Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            width: 80%;
+            max-width: 700px;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #ff6b6b;
+        }
+
+        .recipe-header {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .recipe-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-right: 20px;
+        }
+
+        .recipe-info h3 {
+            font-size: 1.8rem;
+            color: #ff6b6b;
+            margin: 0 0 10px;
+        }
+
+        .recipe-details {
+            margin-top: 20px;
+        }
+
+        .recipe-details h4 {
+            color: #ff6b6b;
+            margin-bottom: 10px;
+        }
+
+        .recipe-details ul, .recipe-details ol {
+            padding-left: 20px;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: white;
+            margin-top: 50px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .header p {
+                font-size: 1.2rem;
+            }
+            
+            .tagline h2 {
+                font-size: 1.5rem;
+            }
+            
+            .recipe-header {
+                flex-direction: column;
+            }
+            
+            .recipe-image {
+                width: 100%;
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <h1>TastyBites</h1>
+        <p>The real joy is homemade</p>
+    </div>
+
+    <!-- Tagline Section -->
+    <div class="tagline">
+        <h2>Cooking is the only art you can see, smell, touch, hear, and finally — taste</h2>
+    </div>
+
+    <!-- Food Gallery -->
+    <div class="food-gallery">
+        <h2>Recipes that make you fall in love </h2>
+        <div class="food-grid">
+            <!-- Idli -->
+            <div class="food-item" onclick="openModal('idli')">
+                <img src="https://as1.ftcdn.net/v2/jpg/08/75/83/06/1000_F_875830667_d8FaVguisCjsHrbLBaritRhLWHIVmPbB.jpg" alt="Idli">
+                <div class="dish-name">Idli</div>
+            </div>
+
+            <!-- Sambar -->
+            <div class="food-item" onclick="openModal('sambar')">
+                <img src="https://as1.ftcdn.net/v2/jpg/05/55/18/74/1000_F_555187466_K2xzLGsoI3dzRLZ4nH7DFzbuF9GoPktd.jpg" alt="Sambar">
+                <div class="dish-name">Sambar</div>
+            </div>
+
+            <!-- Dosa with Chutney -->
+            <div class="food-item" onclick="openModal('dosa')">
+                <img src="https://as1.ftcdn.net/v2/jpg/08/34/91/62/1000_F_834916251_UKmeBSoHhnHOYmWMcoyi17xzHH5YS9Ek.jpg" alt="Dosa with Chutney">
+                <div class="dish-name">Dosa with Chutney</div>
+            </div>
+
+            <!-- Cakes -->
+            <div class="food-item" onclick="openModal('cake')">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cake">
+                <div class="dish-name">Homemade Cake</div>
+            </div>
+
+            <!-- Pizza -->
+            <div class="food-item" onclick="openModal('pizza')">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Pizza">
+                <div class="dish-name">Wood-Fired Pizza</div>
+            </div>
+
+            <!-- Pasta -->
+            <div class="food-item" onclick="openModal('pasta')">
+                <img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Pasta">
+                <div class="dish-name">Creamy Pasta</div>
+            </div>
+
+            <!-- Chicken Biryani -->
+            <div class="food-item" onclick="openModal('biryani')">
+                <img src="https://images.unsplash.com/photo-1633945274309-2c16c9682a8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Chicken Biryani">
+                <div class="dish-name">Chicken Biryani</div>
+            </div>
+
+            <!-- Smoothies -->
+            <div class="food-item" onclick="openModal('smoothie')">
+                <img src="https://as2.ftcdn.net/v2/jpg/00/88/50/77/1000_F_88507796_f54lq4y0JRJn09ZJLTFgc39idJ5MYAu3.jpg" alt="Smoothies">
+                <div class="dish-name">Fresh Smoothies</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipe Modals -->
+    <!-- Idli Modal -->
+    <div id="idli-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('idli-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://as1.ftcdn.net/v2/jpg/08/75/83/06/1000_F_875830667_d8FaVguisCjsHrbLBaritRhLWHIVmPbB.jpg" alt="Idli" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Soft Idli</h3>
+                    <p>Traditional South Indian steamed rice cakes</p>
+                    <p><strong>Prep Time:</strong> 8 hours (including soaking) | <strong>Cook Time:</strong> 10 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>2 cups idli rice</li>
+                    <li>1 cup urad dal</li>
+                    <li>1 tsp fenugreek seeds</li>
+                    <li>Salt to taste</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Soak rice and dal separately for 4-6 hours</li>
+                    <li>Grind dal to smooth paste, rice to slightly coarse paste</li>
+                    <li>Mix together, add salt, and ferment overnight</li>
+                    <li>Grease idli plates, pour batter, steam for 10 minutes</li>
+                    <li>Serve hot with sambar and chutney</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sambar Modal -->
+    <div id="sambar-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('sambar-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://as1.ftcdn.net/v2/jpg/05/55/18/74/1000_F_555187466_K2xzLGsoI3dzRLZ4nH7DFzbuF9GoPktd.jpg" alt="Sambar" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Authentic Sambar</h3>
+                    <p>Flavorful lentil stew with vegetables</p>
+                    <p><strong>Prep Time:</strong> 20 mins | <strong>Cook Time:</strong> 30 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>1 cup toor dal</li>
+                    <li>2 cups mixed vegetables (drumsticks, carrot, pumpkin)</li>
+                    <li>1 small onion, chopped</li>
+                    <li>2 tomatoes, chopped</li>
+                    <li>2 tbsp sambar powder</li>
+                    <li>1/2 tsp turmeric</li>
+                    <li>Tamarind pulp</li>
+                    <li>Mustard seeds, curry leaves for tempering</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Pressure cook dal until soft</li>
+                    <li>Cook vegetables in water with turmeric</li>
+                    <li>Add cooked dal, sambar powder, tamarind, and salt</li>
+                    <li>Simmer for 10 minutes</li>
+                    <li>Temper with mustard seeds and curry leaves in oil</li>
+                    <li>Garnish with coriander leaves</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dosa Modal -->
+    <div id="dosa-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('dosa-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://as1.ftcdn.net/v2/jpg/08/34/91/62/1000_F_834916251_UKmeBSoHhnHOYmWMcoyi17xzHH5YS9Ek.jpg" alt="Dosa" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Crispy Dosa with Chutney</h3>
+                    <p>South Indian fermented crepe with coconut chutney</p>
+                    <p><strong>Prep Time:</strong> 8 hours | <strong>Cook Time:</strong> 5 mins per dosa</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients (Dosa):</h4>
+                <ul>
+                    <li>2 cups rice</li>
+                    <li>1/2 cup urad dal</li>
+                    <li>1/4 tsp fenugreek seeds</li>
+                    <li>Salt to taste</li>
+                </ul>
+                <h4>Ingredients (Coconut Chutney):</h4>
+                <ul>
+                    <li>1 cup grated coconut</li>
+                    <li>2 tbsp roasted chana dal</li>
+                    <li>2 green chilies</li>
+                    <li>1/2 inch ginger</li>
+                    <li>1/2 tsp mustard seeds</li>
+                    <li>Curry leaves for tempering</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Soak rice and dal separately for 4-6 hours</li>
+                    <li>Grind to smooth batter and ferment overnight</li>
+                    <li>Heat griddle, spread batter thin, cook until crisp</li>
+                    <li>For chutney: Blend coconut, chana dal, chilies, ginger with water</li>
+                    <li>Temper with mustard seeds and curry leaves</li>
+                    <li>Serve hot dosa with chutney and sambar</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cake Modal -->
+    <div id="cake-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('cake-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Cake" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Vanilla Sponge Cake</h3>
+                    <p>Light and fluffy homemade cake</p>
+                    <p><strong>Prep Time:</strong> 15 mins | <strong>Cook Time:</strong> 30-35 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>1 1/2 cups all-purpose flour</li>
+                    <li>1 cup sugar</li>
+                    <li>1/2 cup butter (softened)</li>
+                    <li>2 eggs</li>
+                    <li>1/2 cup milk</li>
+                    <li>1 tsp vanilla extract</li>
+                    <li>1 1/2 tsp baking powder</li>
+                    <li>1/4 tsp salt</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Preheat oven to 350°F (175°C)</li>
+                    <li>Cream butter and sugar until light and fluffy</li>
+                    <li>Add eggs one at a time, beating well after each</li>
+                    <li>Mix in vanilla</li>
+                    <li>Combine flour, baking powder and salt in separate bowl</li>
+                    <li>Alternately add flour mixture and milk to butter mixture</li>
+                    <li>Pour into greased cake pan and bake for 30-35 minutes</li>
+                    <li>Cool before serving</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pizza Modal -->
+    <div id="pizza-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('pizza-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Pizza" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Homemade Pizza</h3>
+                    <p>Classic wood-fired style pizza</p>
+                    <p><strong>Prep Time:</strong> 2 hours (dough) | <strong>Cook Time:</strong> 10-12 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients (Dough):</h4>
+                <ul>
+                    <li>3 1/2 cups bread flour</li>
+                    <li>1 1/2 cups warm water</li>
+                    <li>2 tsp active dry yeast</li>
+                    <li>2 tbsp olive oil</li>
+                    <li>2 tsp salt</li>
+                    <li>1 tsp sugar</li>
+                </ul>
+                <h4>Ingredients (Topping):</h4>
+                <ul>
+                    <li>1/2 cup pizza sauce</li>
+                    <li>2 cups shredded mozzarella</li>
+                    <li>Toppings of your choice (pepperoni, mushrooms, etc.)</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Dissolve yeast and sugar in warm water, let sit for 10 mins</li>
+                    <li>Mix flour and salt, add yeast mixture and olive oil</li>
+                    <li>Knead for 10 mins until smooth and elastic</li>
+                    <li>Let dough rise for 1-2 hours until doubled</li>
+                    <li>Preheat oven to 475°F (245°C)</li>
+                    <li>Roll out dough, add sauce, cheese and toppings</li>
+                    <li>Bake for 10-12 minutes until crust is golden</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pasta Modal -->
+    <div id="pasta-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('pasta-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Pasta" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Creamy Alfredo Pasta</h3>
+                    <p>Rich and creamy Italian-style pasta</p>
+                    <p><strong>Prep Time:</strong> 10 mins | <strong>Cook Time:</strong> 20 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>8 oz fettuccine pasta</li>
+                    <li>1/2 cup butter</li>
+                    <li>1 cup heavy cream</li>
+                    <li>1 1/2 cups grated parmesan</li>
+                    <li>2 cloves garlic, minced</li>
+                    <li>Salt and pepper to taste</li>
+                    <li>Chopped parsley for garnish</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Cook pasta according to package directions</li>
+                    <li>Melt butter in large pan over medium heat</li>
+                    <li>Add garlic and cook for 1 minute until fragrant</li>
+                    <li>Add cream and simmer for 5 minutes</li>
+                    <li>Gradually stir in parmesan until melted and smooth</li>
+                    <li>Season with salt and pepper</li>
+                    <li>Toss with drained pasta and garnish with parsley</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Biryani Modal -->
+    <div id="biryani-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('biryani-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://images.unsplash.com/photo-1633945274309-2c16c9682a8c?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80" alt="Biryani" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Chicken Biryani</h3>
+                    <p>Fragrant Indian rice dish with spiced chicken</p>
+                    <p><strong>Prep Time:</strong> 30 mins | <strong>Cook Time:</strong> 1 hour</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>2 cups basmati rice</li>
+                    <li>1 lb chicken (cut into pieces)</li>
+                    <li>1 large onion, sliced</li>
+                    <li>2 tomatoes, chopped</li>
+                    <li>1/2 cup yogurt</li>
+                    <li>2 tbsp biryani masala</li>
+                    <li>1 tbsp ginger-garlic paste</li>
+                    <li>1/2 cup mint leaves</li>
+                    <li>1/2 cup coriander leaves</li>
+                    <li>4 cups water</li>
+                    <li>4 tbsp ghee or oil</li>
+                    <li>Saffron strands soaked in milk (optional)</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Soak rice for 30 minutes, then parboil (70% cooked)</li>
+                    <li>Marinate chicken with yogurt, biryani masala, ginger-garlic paste, salt for 1 hour</li>
+                    <li>In heavy pot, sauté onions until golden</li>
+                    <li>Add marinated chicken and cook for 10 minutes</li>
+                    <li>Add tomatoes and cook until soft</li>
+                    <li>Layer half the rice, then chicken mixture, then herbs, then remaining rice</li>
+                    <li>Sprinkle saffron milk, cover tightly and cook on low heat for 20-25 minutes</li>
+                    <li>Let rest for 10 minutes before serving</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- Smoothie Modal -->
+    <div id="smoothie-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('smoothie-modal')">&times;</span>
+            <div class="recipe-header">
+                <img src="https://as2.ftcdn.net/v2/jpg/00/88/50/77/1000_F_88507796_f54lq4y0JRJn09ZJLTFgc39idJ5MYAu3.jpg" alt="Smoothie" class="recipe-image">
+                <div class="recipe-info">
+                    <h3>Mixed Berry Smoothie</h3>
+                    <p>Refreshing and nutritious fruit blend</p>
+                    <p><strong>Prep Time:</strong> 5 mins | <strong>Cook Time:</strong> 0 mins</p>
+                </div>
+            </div>
+            <div class="recipe-details">
+                <h4>Ingredients:</h4>
+                <ul>
+                    <li>1 cup mixed berries (strawberries, blueberries, raspberries)</li>
+                    <li>1 banana</li>
+                    <li>1/2 cup yogurt</li>
+                    <li>1/2 cup milk or almond milk</li>
+                    <li>1 tbsp honey (optional)</li>
+                    <li>1 tsp chia seeds (optional)</li>
+                    <li>Ice cubes (optional)</li>
+                </ul>
+                <h4>Instructions:</h4>
+                <ol>
+                    <li>Add all ingredients to blender</li>
+                    <li>Blend until smooth</li>
+                    <li>Add more milk if too thick, or ice if too thin</li>
+                    <li>Pour into glass and serve immediately</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2023 TastyBites - The Real Joy is Homemade</p>
+    </footer>
+
+    <script>
+        // Function to open modal
+        function openModal(dish) {
+            document.getElementById(dish + '-modal').style.display = 'block';
+        }
+
+        // Function to close modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target.className === 'modal') {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
